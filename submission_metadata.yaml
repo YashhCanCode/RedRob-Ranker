@@ -1,5 +1,3 @@
-# Redrob Hackathon — Submission Metadata
-# Fill in the TODOs before submitting via the portal.
 
 team_name: "CodeRAG"
 
@@ -15,7 +13,7 @@ team_members:
 
 # ----------------------------------------------------------------------------
 github_repo: "https://github.com/YashhCanCode/RedRob-Ranker"
-sandbox_link: "https://huggingface.co/spaces/TODO_USERNAME/redrob-ranker"  # deploy app.py (see README)
+sandbox_link: "https://redrob-rank.streamlit.app/"
 reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 
 # ----------------------------------------------------------------------------
