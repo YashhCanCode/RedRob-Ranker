@@ -1,0 +1,64 @@
+# Redrob Hackathon — Submission Metadata
+# Fill in the TODOs before submitting via the portal.
+
+team_name: "CodeRAG"
+
+primary_contact:
+  name: "Konnuru Yashwanth"
+  email: "yashwanthkonnuru@gmail.com"
+  phone: "+91 8125409656"
+
+team_members:
+  - name: "Satvika Mantri"
+    email: "satvikamantri2005@gmail.com"
+    
+
+# ----------------------------------------------------------------------------
+github_repo: "https://github.com/YashhCanCode/RedRob-Ranker"
+sandbox_link: "https://huggingface.co/spaces/TODO_USERNAME/redrob-ranker"  # deploy app.py (see README)
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+# ----------------------------------------------------------------------------
+compute:
+  platform: "MacBook Air M2"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.10"
+  os: "MacOS"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: false        # default TF-IDF backend needs no pre-compute
+  pre_computation_time_minutes: 0
+
+# ----------------------------------------------------------------------------
+ai_tools_used:
+  - "Claude"
+ai_usage_summary: |
+  Claude (Cowork) was used as a pair-programmer for architecture discussion,
+  drafting the scoring modules, and code review. All design decisions — the
+  feature set, weights, honeypot heuristics, and the TF-IDF latency/quality
+  tradeoff — are the team's own and are documented in the deck and README.
+  No candidate data was ever sent to any hosted LLM, and the ranking step makes
+  zero network calls.
+
+methodology_summary: |
+  Hybrid, fully-offline ranker. Seven explainable components — title fit,
+  trust-weighted skills, career evidence (product-company + shipped
+  ranking/search/recsys), TF-IDF semantic similarity to a JD-derived query,
+  experience-band fit, domain (NLP/IR vs CV/speech), and location — are combined
+  into a merit score, then modulated by two multipliers: explicit JD
+  disqualifiers (consulting-only, research-only, title-chasing, CV/speech-only,
+  stale IC) and behavioral availability (recruiter response rate, recency,
+  open-to-work, notice). Honeypots are caught by internal-consistency checks
+  (duration vs date span, tenure vs experience, expert proficiency with 0 months
+  usage) and forced below all genuine fits. The title signal and the
+  endorsement/duration skill-trust multiplier are what defeat keyword-stuffers;
+  career-description text lets plain-language strong candidates surface without
+  the buzzwords. Runs in ~1 min for 100k candidates on CPU, no network.
+
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true

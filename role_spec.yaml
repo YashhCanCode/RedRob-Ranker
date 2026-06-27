@@ -1,0 +1,154 @@
+# ============================================================================
+# role_spec.yaml  —  Structured understanding of the job description.
+#
+# This file is the output of the "JD understanding" step. It is produced ONCE,
+# offline (optionally LLM-assisted via precompute.py --parse-jd), then committed
+# so that the ranking step needs no network and is fully reproducible.
+#
+# It encodes not just the keywords in the JD, but what the JD *means* — the
+# disqualifiers, the traps, and the "read between the lines" ideal profile.
+# Source: job_description.docx (Senior AI Engineer — Founding Team, Redrob AI).
+# ============================================================================
+
+role:
+  title: "Senior AI Engineer — Founding Team"
+  company: "Redrob AI (Series A, AI-native talent intelligence)"
+  experience:
+    min_years: 5
+    max_years: 9
+    ideal_min: 6
+    ideal_max: 8
+    # Soft band — strong signals can pull candidates slightly outside it in.
+    soft_tolerance_years: 2
+
+# Free-text query used for the semantic (dense/TF-IDF) similarity component.
+# Phrased the way an ideal candidate's profile would actually read, NOT as a
+# keyword list — so plain-language strong candidates surface.
+semantic_query: >
+  Applied machine learning / AI engineer who has shipped end-to-end ranking,
+  search, retrieval, recommendation or matching systems to real users at a
+  product company. Hands-on with embeddings-based retrieval (sentence
+  transformers, BGE, E5, OpenAI embeddings), vector databases and hybrid search
+  (FAISS, Pinecone, Weaviate, Qdrant, Milvus, Elasticsearch, OpenSearch), and
+  rigorous offline/online evaluation of ranking systems (NDCG, MRR, MAP, A/B
+  testing). Strong production Python. Builds pragmatic systems and ships fast,
+  rather than pure research. NLP and information retrieval background.
+
+# --- HARD / "absolutely need" capabilities (high positive weight) ---
+must_have_concepts:
+  retrieval_embeddings:
+    weight: 1.0
+    terms: [embedding, embeddings, sentence-transformers, sentence transformers,
+            bge, e5, openai embeddings, semantic search, dense retrieval,
+            bi-encoder, cross-encoder, retrieval]
+  vector_search:
+    weight: 1.0
+    terms: [vector database, vector db, faiss, pinecone, weaviate, qdrant,
+            milvus, elasticsearch, opensearch, hybrid search, bm25, ann,
+            approximate nearest neighbor, knn search]
+  ranking_systems:
+    weight: 1.0
+    terms: [ranking, learning to rank, ltr, recommendation, recommender,
+            recsys, search relevance, matching system, candidate ranking]
+  evaluation:
+    weight: 0.8
+    terms: [ndcg, mrr, "map", precision@k, recall@k, a/b test, ab testing,
+            offline evaluation, online evaluation, relevance metrics,
+            evaluation framework]
+  python:
+    weight: 0.5
+    terms: [python, pytorch, numpy, pandas, scikit-learn, fastapi]
+
+# --- "Nice to have" (smaller positive weight, never a gate) ---
+nice_to_have_concepts:
+  finetuning:
+    weight: 0.4
+    terms: [lora, qlora, peft, fine-tuning, fine tuning, instruction tuning, rlhf]
+  ltr_models:
+    weight: 0.4
+    terms: [xgboost, lightgbm, lambdamart, gradient boosting, neural ranking]
+  domain_hrtech:
+    weight: 0.3
+    terms: [hr-tech, hrtech, recruiting, recruitment, talent, marketplace,
+            two-sided marketplace, ats]
+  scale_infra:
+    weight: 0.3
+    terms: [distributed systems, large-scale inference, model serving,
+            triton, onnx, quantization, latency optimization]
+  open_source:
+    weight: 0.3
+    terms: [open source, open-source, github contributor, maintainer, pypi]
+
+# --- Positive title signals (candidate is actually an ML/AI/SW engineer) ---
+# The current/recent TITLE is the decisive signal against keyword-stuffers.
+positive_titles:
+  strong: [machine learning engineer, ml engineer, ai engineer, applied scientist,
+           applied ml, research engineer, search engineer, relevance engineer,
+           nlp engineer, ml platform, staff machine learning, senior machine learning,
+           data scientist, deep learning engineer, mlops engineer]
+  adjacent: [software engineer, backend engineer, data engineer, platform engineer,
+             full stack engineer, software developer]
+
+# --- Negative title signals (the keyword-stuffer trap roles) ---
+# A profile stuffed with AI skills but with one of these as the actual title is
+# NOT a fit, no matter how perfect the skill list looks.
+negative_titles:
+  [marketing manager, content writer, graphic designer, accountant,
+   sales executive, sales manager, hr manager, human resources, recruiter,
+   civil engineer, mechanical engineer, electrical engineer, business analyst,
+   project manager, product manager, operations manager, customer success,
+   teacher, professor, financial analyst, ui designer, ux designer]
+
+# --- Domain alignment ---
+positive_domains: [nlp, natural language processing, information retrieval, search,
+                   recommendation, ranking, machine learning, ml platform, llm]
+# Per the JD: CV/speech/robotics WITHOUT NLP/IR is a negative.
+caution_domains: [computer vision, image classification, object detection, speech,
+                  speech recognition, tts, asr, robotics, autonomous]
+
+# --- Company-type signals ---
+# Pure services/consulting career is an explicit negative (unless prior product co).
+services_companies: [tcs, tata consultancy, infosys, wipro, accenture, cognizant,
+                     capgemini, mindtree, tech mahindra, hcl, hexaware, ltimindtree,
+                     mphasis, deloitte, ibm services, dxc]
+# product / strong-engineering companies (positive evidence of product work)
+product_companies: [google, meta, facebook, amazon, microsoft, apple, netflix,
+                    uber, airbnb, linkedin, flipkart, swiggy, zomato, razorpay,
+                    cred, phonepe, paytm, meesho, sharechat, dunzo, postman,
+                    freshworks, zoho, nvidia, openai, anthropic, databricks,
+                    pinterest, spotify, stripe, atlassian, salesforce, adobe]
+
+# --- Location (Indian metros preferred; relocation willingness compensates) ---
+preferred_locations: [noida, pune, hyderabad, mumbai, delhi, "new delhi",
+                      "delhi ncr", gurgaon, gurugram, bangalore, bengaluru,
+                      india]
+# Outside India: case-by-case, no visa sponsorship -> mild penalty unless relocating.
+
+# --- Explicit disqualifiers / red flags from the JD ---
+red_flags:
+  research_only:        # academic/research-only, no production deployment
+    penalty: 0.30
+    terms: [research scientist, phd researcher, postdoc, academic, research fellow,
+            research assistant, university, laboratory]
+  langchain_only:       # <12mo of "LangChain calling OpenAI" with no real ML
+    penalty: 0.20
+    terms: [langchain, llamaindex, prompt engineer, gpt wrapper, autogpt]
+  consulting_only:      # entire career at services firms
+    penalty: 0.30
+  title_chaser:         # job-hops ~every 1.5 yrs optimizing for title
+    penalty: 0.20
+    max_avg_tenure_months: 20
+  cv_speech_robotics_only:
+    penalty: 0.25
+  stale_ic:             # senior who hasn't written code in 18+ months
+    penalty: 0.15
+    terms: [engineering manager, vp engineering, director of engineering,
+            head of, architect, technical lead, tech lead]
+
+# --- Behavioral modifier (multiplier on the merit score) ---
+# A perfect-on-paper candidate who is inactive / unresponsive is not hireable.
+behavioral:
+  weight: 1.0           # overall strength of the behavioral multiplier
+  stale_days: 120       # last_active older than this -> strong availability penalty
+  good_response_rate: 0.5
+  notice_period_soft_cap_days: 30

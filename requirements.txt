@@ -1,0 +1,12 @@
+# --- Required for the ranking step (rank.py) ---
+numpy>=1.24
+scikit-learn>=1.3
+PyYAML>=6.0
+
+# --- Required for the hosted sandbox demo (app.py / Streamlit Cloud) ---
+streamlit>=1.30
+pandas>=2.0
+
+# --- Optional: dense-embedding pre-computation (precompute.py) ---
+# Uncomment only if you use the optional dense backend.
+# sentence-transformers>=2.7

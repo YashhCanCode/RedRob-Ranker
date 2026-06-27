@@ -1,0 +1,17 @@
+# Scoring weights for the merit score. Normalized at runtime.
+# Rationale: title + career evidence + skills(trust) dominate, because those are
+# what separate a real AI engineer from a keyword-stuffer. Semantic similarity is
+# a meaningful but non-dominant signal (it surfaces plain-language strong
+# candidates). Behavioral signals and red flags are applied as multipliers on top.
+scoring:
+  weights:
+    title: 0.24        # decisive anti-keyword-stuffer signal
+    skills: 0.18       # trust-weighted (endorsements + duration + assessments)
+    career: 0.18       # product-company + shipped ranking/search/recsys evidence
+    semantic: 0.16     # JD<->profile semantic similarity
+    experience: 0.12   # 5-9y band (ideal 6-8)
+    domain: 0.07       # NLP/IR vs CV/speech/robotics
+    location: 0.05     # Indian metro / relocation
+
+output:
+  shortlist_size: 100
